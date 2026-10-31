@@ -1,0 +1,70 @@
+volumes:
+  postgres-data:
+  kestra-data:
+
+services:
+  postgres:
+    image: postgres:18
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: k3str4
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  kestra:
+    image: kestra/kestra:latest
+    pull_policy: always
+    user: "root"
+    command: server standalone --worker-thread=128
+    volumes:
+      - kestra-data:/app/storage
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/kestra-wd:/tmp/kestra-wd
+      # GCP service account key, mounted read-only (never copied into the image)
+      - type: bind
+        source: ${GOOGLE_APPLICATION_CREDENTIALS}
+        target: /app/.gcp/key.json
+        read_only: true
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/.gcp/key.json
+      # Available in flows as {{ envs.project_id }}, {{ envs.region }}, {{ envs.bucket_name }}
+      ENV_PROJECT_ID: ${PROJECT_ID}
+      ENV_REGION: ${REGION}
+      ENV_BUCKET_NAME: ${TF_VAR_bucket_name}
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://postgres:5432/kestra
+            driver-class-name: org.postgresql.Driver
+            username: kestra
+            password: k3str4
+        kestra:
+          server:
+            basic-auth:
+              username: admin@kestra.io
+              password: Admin1234!
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              base-path: "/app/storage"
+          queue:
+            type: postgres
+          tasks:
+            tmp-dir:
+              path: /tmp/kestra-wd/tmp
+          url: http://localhost:8080/
+          tutorialFlows:
+            enabled: false
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
