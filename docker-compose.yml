@@ -18,8 +18,8 @@ services:
       retries: 20
 
   kestra:
-    image: kestra/kestra:latest
-    pull_policy: always
+    image: kestra/kestra:v2.0.8
+    pull_policy: if_not_present
     user: "root"
     command: server standalone --worker-thread=128
     volumes:
