@@ -1,0 +1,10 @@
+version: 2
+
+seeds:
+  - name: cause_of_damage_codes
+    description: >
+      Lookup for the NFIP cause of damage code, taken from the OpenFEMA data dictionary
+      for the NFIP Redacted Claims dataset.
+    columns:
+      - name: cause_of_damage_code
+        data_tests: [unique, not_null]

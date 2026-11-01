@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: nfip_raw
+    description: Raw OpenFEMA data, loaded monthly by the Kestra flow nfip_claims_ingestion.
+    database: "{{ env_var('PROJECT_ID') }}"
+    schema: nfip_raw
+    tables:
+      - name: claims
+        description: >
+          NFIP Redacted Claims v3 (OpenFEMA): one row per flood insurance claim, 1970s to present.
+          Full snapshot replaced on every load.
+        config:
+          loaded_at_field: "cast(asOfDate as timestamp)"
+          freshness:
+            # OpenFEMA refreshes NFIP data roughly every 40-60 days
+            warn_after: {count: 75, period: day}
+            error_after: {count: 120, period: day}
+        columns:
+          - name: id
+            data_tests: [unique, not_null]

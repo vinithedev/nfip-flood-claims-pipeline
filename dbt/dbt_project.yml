@@ -1,0 +1,26 @@
+name: nfip_flood_claims
+version: "1.0.0"
+config-version: 2
+profile: nfip_flood_claims
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  nfip_flood_claims:
+    # All models live in the nfip_analytics dataset (managed by Terraform);
+    # layers are told apart by prefix: stg_ (staging), fct_ (facts), agg_ (aggregates).
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
+
+seeds:
+  nfip_flood_claims:
+    cause_of_damage_codes:
+      +column_types:
+        cause_of_damage_code: string
+        cause_of_damage_description: string

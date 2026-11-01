@@ -1,0 +1,422 @@
+[
+  {
+    "mode": "NULLABLE",
+    "name": "agricultureStructureIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "asOfDate",
+    "type": "TIMESTAMP"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "basementEnclosureCrawlspaceType",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "policyCount",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "crsClassCode",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "dateOfLoss",
+    "type": "DATE"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "elevatedBuildingIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "elevationCertificateIndicator",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "elevationDifference",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "baseFloodElevation",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "ratedFloodZone",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "houseWorship",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "locationOfContents",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "lowestAdjacentGrade",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "lowestFloorElevation",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "numberOfFloorsInTheInsuredBuilding",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nonProfitIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "obstructionType",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "occupancyType",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "originalConstructionDate",
+    "type": "DATE"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "originalNBDate",
+    "type": "DATE"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "amountPaidOnBuildingClaim",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "amountPaidOnContentsClaim",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "amountPaidOnIncreasedCostOfComplianceClaim",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "postFIRMConstructionIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "rateMethod",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "smallBusinessIndicatorBuilding",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalBuildingInsuranceCoverage",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalContentsInsuranceCoverage",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "yearOfLoss",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "primaryResidenceIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "buildingDamageAmount",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "buildingDeductibleCode",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "netBuildingPaymentAmount",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "buildingPropertyValue",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "causeOfDamage",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "condominiumCoverageTypeCode",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "contentsDamageAmount",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "contentsDeductibleCode",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "netContentsPaymentAmount",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "contentsPropertyValue",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "disasterAssistanceCoverageRequired",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "eventDesignationNumber",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "ficoNumber",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "floodCharacteristicsIndicator",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "floodWaterDuration",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "floodproofedIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "floodEvent",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "iccCoverage",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "netIccPaymentAmount",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nfipRatedCommunityNumber",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nfipCommunityNumberCurrent",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nfipCommunityName",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nonPaymentReasonContents",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nonPaymentReasonBuilding",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "numberOfUnits",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "buildingReplacementCost",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "contentsReplacementCost",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "replacementCostBasis",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "stateOwnedIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "waterDepth",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "floodZoneCurrent",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "buildingDescriptionCode",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "rentalPropertyIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "state",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "reportedCity",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "reportedZipCode",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "countyCode",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "censusGeoid",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "latitude",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "longitude",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "foundationType",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "openDate",
+    "type": "DATE"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "mostRecentRecoveryDate",
+    "type": "DATE"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "exteriorWaterDepth",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "interiorWaterDepth",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "mostRecentPaymentDate",
+    "type": "DATE"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "preFirmIndicator",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalSalvageRecovery",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalBldgClaimPmtRecovery",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalContentsClaimPmtRecovery",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalIccClaimPmtRecovery",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "totalSubrogationRecovery",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "id",
+    "type": "INTEGER"
+  }
+]

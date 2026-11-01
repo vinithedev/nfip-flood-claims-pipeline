@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: fct_claims
+    description: >
+      One row per NFIP claim with business-friendly columns. Partitioned by month of loss,
+      clustered by state and flood zone group.
+    columns:
+      - name: claim_id
+        data_tests: [unique, not_null]
+      - name: cause_of_damage
+        data_tests: [not_null]
+
+  - name: agg_claims_by_state_year
+    description: Claims, total paid and average severity by state and year of loss.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [state, year_of_loss]
+
+  - name: agg_claims_by_flood_zone
+    description: Claims, total paid and average severity by flood zone risk group and elevation.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [flood_zone_group, is_elevated_building]

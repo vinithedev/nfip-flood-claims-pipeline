@@ -1,0 +1,13 @@
+cause_of_damage_code,cause_of_damage_description
+0,Other causes
+1,Tidal water overflow
+2,"Stream, river, or lake overflow"
+3,Alluvial fan overflow
+4,Accumulation of rainfall or snowmelt
+7,Erosion-demolition
+8,Erosion-removal
+9,"Earth movement, landslide, land subsidence, sinkholes"
+A,Closed basin lake
+B,Expedited claim handling without site inspection
+C,Expedited claim handling with follow-up site inspection
+D,Expedited claim handling by remote adjustment

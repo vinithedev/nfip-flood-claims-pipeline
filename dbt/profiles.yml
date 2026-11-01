@@ -1,0 +1,15 @@
+# Credentials and project come from environment variables (see .env.example), so this file
+# contains no secrets and can be committed. dbt picks it up from the project directory.
+nfip_flood_claims:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      project: "{{ env_var('PROJECT_ID') }}"
+      dataset: nfip_analytics
+      location: "{{ env_var('REGION', 'us-central1') }}"
+      threads: 4
+      job_execution_timeout_seconds: 300
+      priority: interactive

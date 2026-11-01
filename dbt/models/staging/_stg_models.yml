@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_claims
+    description: >
+      Cleaned NFIP claims: one row per claim, snake_case names, total paid amount and
+      flood zone risk group. View over nfip_raw.claims.
+    columns:
+      - name: claim_id
+        description: OpenFEMA record id.
+        data_tests: [unique, not_null]
+      - name: state
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: date_of_loss
+        description: Date water first entered the insured building.
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: flood_zone_group
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - V - Coastal high risk
+                  - A - High risk
+                  - B/C/X - Moderate to low risk
+                  - D - Undetermined risk
+                  - Unknown
+      - name: total_amount_paid
+        description: Building + contents + increased cost of compliance (ICC) payments.
+        data_tests:
+          # FEMA documents negative payments (reissued checks), so this only warns
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
