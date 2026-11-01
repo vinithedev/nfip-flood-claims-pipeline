@@ -36,6 +36,6 @@ tasks:
           REGION: "{{ envs.region }}"
         timeout: PT30M
         commands:
-          - pip install --quiet --disable-pip-version-check -r requirements.txt
+          - pip install --quiet --disable-pip-version-check --root-user-action=ignore -r requirements.txt
           - export GOOGLE_APPLICATION_CREDENTIALS="$PWD/sa.json"
           - cd dbt && dbt deps && dbt build
