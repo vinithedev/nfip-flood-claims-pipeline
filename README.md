@@ -41,13 +41,13 @@ flowchart LR
 
 | Layer | Tool |
 |---|---|
-| Cloud | Google Cloud Platform (region `us-central1`) |
+| Cloud | Google Cloud Platform |
 | Infrastructure as code | Terraform |
 | Orchestration | Kestra 2.0 (Docker Compose, Postgres backend) |
-| Data lake | Google Cloud Storage (Parquet) |
+| Data lake | Google Cloud Storage |
 | Data warehouse | BigQuery |
 | Transformations and tests | dbt Core 1.12 + dbt-bigquery |
-| Dashboard | Data Studio (formerly Looker Studio) |
+| Dashboard | Data Studio |
 
 ## Dataset
 
@@ -246,7 +246,7 @@ docker compose up -d
 docker compose ps    # postgres: healthy, kestra: running
 ```
 
-Open http://localhost:8080 (it can take a minute or two to start) and sign in with `admin@kestra.io` / `Admin1234!`.
+Open http://localhost:8080 and sign in with `admin@kestra.io` / `Admin1234!`.
 
 > If Docker Desktop fails to start with `ERROR_NO_SYSTEM_RESOURCES`, Windows couldn't reserve memory for its WSL virtual machine. Quit Docker Desktop, run `wsl --shutdown`, close memory-heavy apps and start it again; if that isn't enough, restart Windows and open Docker Desktop first.
 
@@ -329,14 +329,3 @@ Everything runs within the GCP free tier: each monthly snapshot is a few hundred
 | Transformations | dbt models, seed and tests, run from Kestra |
 | Dashboard | Data Studio, two pages ([link](https://datastudio.google.com/reporting/94ae9b53-be67-4e0b-8b9c-b034c31ad05f)) |
 | Reproducibility | [Step-by-step instructions](#how-to-reproduce) driven by a single `.env` file |
-
-## Future work
-
-- Add the NFIP Policies dataset to compute claim frequency and loss ratios.
-- Adjust amounts for inflation (CPI).
-- Speed up ingestion by downloading id ranges in parallel.
-- CI with GitHub Actions running `dbt build` on pull requests.
-
-## License
-
-[MIT](LICENSE). Data: FEMA OpenFEMA. This product uses FEMA's API but is not endorsed by FEMA or the Federal Government.
