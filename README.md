@@ -14,7 +14,7 @@ Final project for the [DataTalksClub Data Engineering Zoomcamp](https://github.c
 
 ## Problem
 
-The NFIP insures more than 4 million U.S. properties against flood and has paid about **$90 billion** across **2.7 million claims**. FEMA publishes every claim (anonymized) through OpenFEMA, but in a raw form: 80+ columns with coded values, refreshed roughly monthly, and with no ready-made view for analysis.
+The NFIP insures millions of U.S. properties against flood and has paid about **$90 billion** across **2.7 million claims**. FEMA publishes every claim (anonymized) through OpenFEMA, but in a raw form: 80+ columns with coded values, refreshed roughly monthly, and with no ready-made view for analysis.
 
 This project turns that raw feed into a reliable, monthly refreshed analytics layer that answers questions an insurer, reinsurer or risk analyst would ask:
 
@@ -51,7 +51,7 @@ flowchart LR
 
 ## Dataset
 
-[FEMA OpenFEMA, FIMA NFIP Redacted Claims v3](https://www.fema.gov/openfema-data-page/fima-nfip-redacted-claims-v2): one row per flood insurance claim, about 2.7 million rows and 80+ columns (dates, location, flood zone, building characteristics, coverage, damage and payments). Public domain, refreshed by FEMA roughly every 1–2 months.
+FEMA OpenFEMA, FIMA NFIP Redacted Claims v3 ([API endpoint](https://www.fema.gov/api/open/v3/NfipClaims?$top=1), [OpenFEMA data sets](https://www.fema.gov/about/openfema/data-sets)): one row per flood insurance claim, about 2.7 million rows and 80+ columns (dates, location, flood zone, building characteristics, coverage, damage and payments). Public domain, refreshed by FEMA roughly every 1–2 months.
 
 ## How the pipeline works
 
@@ -80,7 +80,7 @@ Kestra clones this repository and runs `dbt deps && dbt build` in a Python conta
 | `agg_claims_by_state_year` | table | Claims, total paid and severity by state and year. |
 | `agg_claims_by_flood_zone` | table | Claims, total paid, severity and average water depth by flood zone group and building elevation. |
 
-**Tests** (20 in total): unique and not-null ids in the source and models, accepted values for the flood zone groups, unique combinations in the aggregates, and a source freshness check (warn after 75 days, error after 120). Negative payments only produce a warning, because FEMA documents them as reissued checks.
+**Tests** (15 data tests): unique and not-null keys in the source, the seed and the models, accepted values for the flood zone groups, unique combinations in the aggregates, and a source freshness check (warn after 75 days, error after 120). Negative payments only produce a warning, because FEMA documents them as reissued checks.
 
 ### 3. Dashboard
 
@@ -139,7 +139,7 @@ My background is 5+ years of SQL Server development in insurance, where the tran
 - **No exposure data.** The dataset only contains claims, not policies in force, so frequency and loss ratios can't be computed. Joining the OpenFEMA NFIP Policies dataset is the natural next step.
 - **Nominal dollars.** Amounts are not adjusted for inflation, so a 1980 claim and a 2024 claim aren't directly comparable.
 - **Generic event names.** About 358,000 claims have the event name "Flooding" instead of a named event.
-- **Negative payments.** FEMA documents them as reissued checks; the dbt test only warns about them.
+- **Negative payments.** 86 claims have a negative total paid. FEMA documents them as reissued checks, so the dbt test only warns about them.
 - **Redacted data.** Locations are generalized for privacy, so the analysis stays at state, county or ZIP level.
 - **Recent events are still developing.** Claims for the latest events are still being paid, so recent totals will grow.
 
@@ -166,6 +166,8 @@ My background is 5+ years of SQL Server development in insurance, where the tran
 
 Tested on Windows with Git Bash and Docker Desktop. The same commands work in bash on Linux and macOS.
 
+> On Windows, run every command in **Git Bash**, not PowerShell or CMD (in VS Code: terminal dropdown → Git Bash). Unless a step says otherwise, run commands from the repository root.
+
 ### Prerequisites
 
 - A GCP account with billing enabled. Everything fits in the free tier.
@@ -184,13 +186,14 @@ cd nfip-flood-claims-pipeline
 cp .env.example .env
 ```
 
-Edit `.env` and set at least `PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` (on Windows, use forward slashes: `C:/Users/you/.gcp/nfip-pipeline.json`). Then load it:
+Edit `.env` and set at least `PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` (on Windows, use forward slashes: `C:/Users/you/.gcp/nfip-pipeline.json`). The key file doesn't exist yet: step 2 creates it at that path. If you already have a key with that name for another project, choose a different file name. Then load `.env` and check it:
 
 ```bash
 set -a; source .env; set +a
+echo "[$PROJECT_ID] [$GOOGLE_APPLICATION_CREDENTIALS]"   # both must be filled in
 ```
 
-> `set -a` exports every variable defined while sourcing, so Terraform, Docker Compose and dbt can read them. Run this line again in every new terminal.
+> `set -a` exports every variable defined while sourcing, so Terraform, Docker Compose and dbt can read them. Run this line again in every new terminal: if a command complains about a missing value (for example `gcloud config set project` saying `VALUE: Must be specified`), `.env` isn't loaded.
 
 ### 2. Set up GCP
 
@@ -236,11 +239,16 @@ This creates the bucket `${PROJECT_ID}-data-lake` and the datasets `nfip_raw` an
 
 ### 4. Start Kestra
 
+Make sure Docker Desktop shows **Engine running**, then:
+
 ```bash
 docker compose up -d
+docker compose ps    # postgres: healthy, kestra: running
 ```
 
-Open http://localhost:8080 (it can take a minute to start) and sign in with `admin@kestra.io` / `Admin1234!`.
+Open http://localhost:8080 (it can take a minute or two to start) and sign in with `admin@kestra.io` / `Admin1234!`.
+
+> If Docker Desktop fails to start with `ERROR_NO_SYSTEM_RESOURCES`, Windows couldn't reserve memory for its WSL virtual machine. Quit Docker Desktop, run `wsl --shutdown`, close memory-heavy apps and start it again; if that isn't enough, restart Windows and open Docker Desktop first.
 
 ### 5. Deploy the flows
 
@@ -249,14 +257,15 @@ for flow in kestra/flows/*.yml; do
   curl -s -u 'admin@kestra.io:Admin1234!' \
     -X POST http://localhost:8080/api/v1/main/flows/import \
     -F fileUpload=@"$flow"
+  echo
 done
 ```
 
-Alternatively, in the Kestra UI: **Flows → Create**, paste the content of each file and save.
+The endpoint returns the flows that failed to import, so `[]` for each file means success. Alternatively, in the Kestra UI: **Flows → Create**, paste the content of each file and save.
 
 ### 6. Run the pipeline
 
-In the Kestra UI, open **Flows → nfip → nfip_claims_ingestion → Execute** and keep the default inputs.
+In the Kestra UI, open **Flows → nfip → nfip_claims_ingestion → Execute** and keep the default inputs (`page_size` 10000, `start_after_id` empty, `max_records` 0).
 
 The full run takes about an hour: around 55 minutes to download the 2.7 million records from the API, then a few minutes for the load and dbt. When it finishes, `nfip_analytics.fct_claims` is ready. After that, the flow runs by itself every month.
 
@@ -278,14 +287,23 @@ dbt source freshness
 
 ### 8. Dashboard
 
-Open the [live dashboard](https://datastudio.google.com/reporting/94ae9b53-be67-4e0b-8b9c-b034c31ad05f), choose **⋮ → Make a copy**, and as the new data source pick **BigQuery → your project → `nfip_analytics` → `fct_claims`**.
+The report's metrics and the map field are calculated fields stored in its data source, so copy the report **with its data source** and then point that data source to your project. Replacing the data source in the copy dialog drops those fields and breaks the charts.
 
-The metrics are defined as:
+1. Open the [live dashboard](https://datastudio.google.com/reporting/94ae9b53-be67-4e0b-8b9c-b034c31ad05f) and choose **⋮ → Make a copy**. Keep the data source as it is and click **Copy report**.
+2. In the copy, open **Resource → Manage added data sources** and click **Edit** on `fct_claims`.
+3. Select **BigQuery → your project → `nfip_analytics` → `fct_claims`** and click **Reconnect**. If Data Studio asks you to confirm the field changes, click **Apply**, then **Done** and **Close**.
 
-- **Claims** = count of claims
-- **Paid claims** = claims with `total_amount_paid > 0` (`is_paid_claim`)
-- **Total paid** = sum of `total_amount_paid`
-- **Avg severity** = Total paid / Paid claims
+The numbers should match the live dashboard (2,725,989 claims, $89.86B paid). To confirm the copy is reading your project, `bq ls -j -n 10 --project_id=$PROJECT_ID` should list the dashboard's recent queries.
+
+If you build the report from scratch instead, these are the calculated fields it uses:
+
+| Field | Formula |
+|---|---|
+| Claims | `COUNT(claim_id)` |
+| Paid claims | `SUM(CASE WHEN is_paid_claim THEN 1 ELSE 0 END)` |
+| Total paid | `SUM(total_amount_paid)` |
+| Avg severity | `SUM(total_amount_paid) / SUM(CASE WHEN is_paid_claim THEN 1 ELSE 0 END)` |
+| State (geo) | `CONCAT("US-", state)`, type *Geo → Country subdivision (1st level)* |
 
 ### Teardown
 
@@ -298,7 +316,7 @@ Then delete the service account key file, and the GCP project if you created one
 
 ## Cost
 
-Everything runs within the GCP free tier: each monthly snapshot is a few hundred MB in GCS, the BigQuery tables are about 1 GB, and a monthly dbt build plus dashboard queries stay far below the free 1 TiB of queries per month. Setting a budget alert and a daily BigQuery query quota is still recommended.
+Everything runs within the GCP free tier: each monthly snapshot is a few hundred MB in GCS, the BigQuery tables take a few GB at most (10 GB of storage is free), and a monthly dbt build plus dashboard queries stay far below the free 1 TiB of queries per month. Setting a budget alert and a daily BigQuery query quota is still recommended.
 
 ## Zoomcamp evaluation criteria
 
