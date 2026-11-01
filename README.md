@@ -2,7 +2,7 @@
 
 End-to-end batch data pipeline for **U.S. flood insurance claims** (FEMA's National Flood Insurance Program, 1978–present): OpenFEMA API → Kestra → Google Cloud Storage → BigQuery → dbt → Data Studio.
 
-Final project for the [DataTalksClub Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp).
+Built as the capstone of the [DataTalksClub Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp) (self-paced), following the course's project criteria.
 
 **[Live dashboard](https://datastudio.google.com/reporting/94ae9b53-be67-4e0b-8b9c-b034c31ad05f)**
 
