@@ -1,0 +1,41 @@
+id: nfip_dbt_build
+namespace: nfip
+description: |
+  Builds the dbt project (seeds, staging and marts) and runs its data tests.
+  Called by nfip_claims_ingestion after each monthly load, and can also be run on its own
+  (e.g. after changing a model) without downloading the data again.
+
+  dbt code comes from the GitHub repository (main branch), so changes must be pushed first:
+  the same code that is reviewed in git is what runs in production.
+
+inputs:
+  - id: git_branch
+    type: STRING
+    defaults: main
+
+tasks:
+  - id: workspace
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: clone_repo
+        type: io.kestra.plugin.git.Clone
+        url: "{{ envs.git_repo_url }}"
+        branch: "{{ inputs.git_branch }}"
+
+      - id: dbt_build
+        type: io.kestra.plugin.scripts.shell.Commands
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        containerImage: python:3.12-slim
+        # The service account key is written to a temporary file in the working directory,
+        # which is deleted with the container at the end of the task.
+        inputFiles:
+          sa.json: "{{ secret('GCP_SERVICE_ACCOUNT') }}"
+        env:
+          PROJECT_ID: "{{ envs.project_id }}"
+          REGION: "{{ envs.region }}"
+        timeout: PT30M
+        commands:
+          - pip install --quiet --disable-pip-version-check -r requirements.txt
+          - export GOOGLE_APPLICATION_CREDENTIALS="$PWD/sa.json"
+          - cd dbt && dbt deps && dbt build

@@ -37,6 +37,9 @@ services:
       ENV_PROJECT_ID: ${PROJECT_ID}
       ENV_REGION: ${REGION}
       ENV_BUCKET_NAME: ${TF_VAR_bucket_name}
+      ENV_GIT_REPO_URL: ${GIT_REPO_URL}
+      # Kestra OSS secret, read in flows as {{ secret('GCP_SERVICE_ACCOUNT') }} (value must be base64)
+      SECRET_GCP_SERVICE_ACCOUNT: ${GCP_SERVICE_ACCOUNT_B64}
       KESTRA_CONFIGURATION: |
         datasources:
           postgres:

@@ -11,6 +11,7 @@ description: |
        the page size and fetched as JSON instead.
     2. upload_to_gcs: store the snapshot in the data lake, partitioned by snapshot date
     3. load_to_bigquery: load it into nfip_raw.claims, replacing the previous snapshot
+    4. run_dbt: run the nfip_dbt_build flow (staging, marts and tests)
 
 inputs:
   - id: api_url
@@ -221,6 +222,15 @@ tasks:
     format: PARQUET
     createDisposition: CREATE_IF_NEEDED
     writeDisposition: WRITE_TRUNCATE
+
+  - id: run_dbt
+    type: io.kestra.plugin.core.flow.Subflow
+    runIf: "{{ inputs.max_records == 0 and inputs.start_after_id is null }}"
+    description: Rebuild the dbt models on top of the fresh snapshot
+    namespace: nfip
+    flowId: nfip_dbt_build
+    wait: true
+    transmitFailed: true
 
 triggers:
   - id: monthly
